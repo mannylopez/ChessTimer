@@ -9,12 +9,15 @@
 /* Begin PBXBuildFile section */
 		3D45F17A25F47E4900C38088 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F17925F47E4900C38088 /* AppDelegate.swift */; };
 		3D45F17C25F47E4900C38088 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F17B25F47E4900C38088 /* SceneDelegate.swift */; };
-		3D45F17E25F47E4900C38088 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F17D25F47E4900C38088 /* ViewController.swift */; };
+		3D45F17E25F47E4900C38088 /* ScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F17D25F47E4900C38088 /* ScreenViewController.swift */; };
 		3D45F18125F47E4900C38088 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D45F17F25F47E4900C38088 /* Main.storyboard */; };
 		3D45F18325F47E4A00C38088 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D45F18225F47E4A00C38088 /* Assets.xcassets */; };
 		3D45F18625F47E4A00C38088 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D45F18425F47E4A00C38088 /* LaunchScreen.storyboard */; };
 		3D45F19125F47E4A00C38088 /* ChessTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F19025F47E4A00C38088 /* ChessTimerTests.swift */; };
 		3D45F19C25F47E4A00C38088 /* ChessTimerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45F19B25F47E4A00C38088 /* ChessTimerUITests.swift */; };
+		3D796BF525FC2ADD003AE306 /* TimePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D796BF425FC2ADD003AE306 /* TimePickerViewController.swift */; };
+		3D796C0025FD8686003AE306 /* TimePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D796BFF25FD8686003AE306 /* TimePickerDelegate.swift */; };
+		3DFBD2E225F5E6EA00972FFB /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBD2E125F5E6EA00972FFB /* Player.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +41,7 @@
 		3D45F17625F47E4900C38088 /* ChessTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D45F17925F47E4900C38088 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D45F17B25F47E4900C38088 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		3D45F17D25F47E4900C38088 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3D45F17D25F47E4900C38088 /* ScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenViewController.swift; sourceTree = "<group>"; };
 		3D45F18025F47E4900C38088 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3D45F18225F47E4A00C38088 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D45F18525F47E4A00C38088 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +52,9 @@
 		3D45F19725F47E4A00C38088 /* ChessTimerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessTimerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D45F19B25F47E4A00C38088 /* ChessTimerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessTimerUITests.swift; sourceTree = "<group>"; };
 		3D45F19D25F47E4A00C38088 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D796BF425FC2ADD003AE306 /* TimePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerViewController.swift; sourceTree = "<group>"; };
+		3D796BFF25FD8686003AE306 /* TimePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerDelegate.swift; sourceTree = "<group>"; };
+		3DFBD2E125F5E6EA00972FFB /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +107,10 @@
 			children = (
 				3D45F17925F47E4900C38088 /* AppDelegate.swift */,
 				3D45F17B25F47E4900C38088 /* SceneDelegate.swift */,
-				3D45F17D25F47E4900C38088 /* ViewController.swift */,
+				3D45F17D25F47E4900C38088 /* ScreenViewController.swift */,
+				3D796BF425FC2ADD003AE306 /* TimePickerViewController.swift */,
+				3D796BFF25FD8686003AE306 /* TimePickerDelegate.swift */,
+				3DFBD2E125F5E6EA00972FFB /* Player.swift */,
 				3D45F17F25F47E4900C38088 /* Main.storyboard */,
 				3D45F18225F47E4A00C38088 /* Assets.xcassets */,
 				3D45F18425F47E4A00C38088 /* LaunchScreen.storyboard */,
@@ -258,8 +267,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D45F17E25F47E4900C38088 /* ViewController.swift in Sources */,
+				3DFBD2E225F5E6EA00972FFB /* Player.swift in Sources */,
+				3D45F17E25F47E4900C38088 /* ScreenViewController.swift in Sources */,
 				3D45F17A25F47E4900C38088 /* AppDelegate.swift in Sources */,
+				3D796C0025FD8686003AE306 /* TimePickerDelegate.swift in Sources */,
+				3D796BF525FC2ADD003AE306 /* TimePickerViewController.swift in Sources */,
 				3D45F17C25F47E4900C38088 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
