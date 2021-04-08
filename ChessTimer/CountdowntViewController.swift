@@ -5,6 +5,7 @@ import UIKit
 
 class CountdowntViewController: UIViewController, TimePickerDelegate {
 
+  // MARK: - Properties
   var timer: Timer?
   let playerOne: Player
   let playerTwo: Player
@@ -104,7 +105,6 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
     stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
     stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-
   }
 
   // MARK: - METHODS
@@ -147,7 +147,7 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     timerLabelBottom.text = "\(timeFormatted(playerTwo.timeRemaining))"
   }
 
-  @objc func endTurnTopButtonPressed(sender: UIButton) {
+  @objc func endTurnTopButtonPressed(_ sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
       timer = startTimer()
     }
@@ -159,7 +159,7 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1)
   }
 
-  @objc func endTurnBottomButtonPressed(sender: UIButton) {
+  @objc func endTurnBottomButtonPressed(_ sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
       timer = startTimer()
     }
@@ -207,5 +207,4 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
     restart()
   }
-
 }

@@ -4,6 +4,8 @@
 import UIKit
 
 class TimePickerViewController: UIViewController {
+
+  // MARK: - Properties
   let datePicker: UIDatePicker
   let stackView: UIStackView
   var confirmButton: UIButton
@@ -61,11 +63,9 @@ class TimePickerViewController: UIViewController {
     stackView.topAnchor.constraint(equalTo: datePicker.bottomAnchor).isActive = true
     stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
     stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-
-
-
   }
 
+  // MARK: - Methods
   @objc func cancelButtonTapped(sender: UIButton) {
     dismiss(animated: true, completion: nil)
   }
