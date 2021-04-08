@@ -67,18 +67,11 @@ class TimePickerViewController: UIViewController {
   }
 
   @objc func cancelButtonTapped(sender: UIButton) {
-    print("cancelButtonTapped()")
     dismiss(animated: true, completion: nil)
   }
 
   @objc func confirmButtonTapped(sender: UIButton) {
-    print("confirmButtonTapped()")
-    print("\(datePicker.countDownDuration)")
-
     timePickerDelegate?.timeSelected(timeInterval: datePicker.countDownDuration)
-
-    print("self.datePicker.countDownDuration: \(self.datePicker.countDownDuration)")
-
     dismiss(animated: true, completion: nil)
   }
 }
