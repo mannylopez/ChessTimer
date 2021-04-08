@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(frame: windowScene.coordinateSpace.bounds)
     window?.windowScene = windowScene
-    let rootViewController = TempCountdowntViewController()
+    let rootViewController = CountdowntViewController()
     rootViewController.view.backgroundColor = .white
     window?.rootViewController = rootViewController
     window?.makeKeyAndVisible()

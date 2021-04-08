@@ -3,13 +3,13 @@
 
 import UIKit
 
-class TempCountdowntViewController: UIViewController {
+class CountdowntViewController: UIViewController, TimePickerDelegate {
 
   var timer: Timer?
-  var playerOne: Player
-  var playerTwo: Player
-  var timerLabelTop: UILabel
-  var timerLabelBottom: UILabel
+  let playerOne: Player
+  let playerTwo: Player
+  let timerLabelTop: UILabel
+  let timerLabelBottom: UILabel
   let stackView: UIStackView
   let setTimeButton: UIButton
   let pauseTimeButton: UIButton
@@ -21,8 +21,8 @@ class TempCountdowntViewController: UIViewController {
   var arrowClockwiseImage = UIImage(systemName: "arrow.clockwise")
 
   init() {
-    playerOne = Player(startTime: 600, timeRemaining: 600)
-    playerTwo = Player(startTime: 600, timeRemaining: 600)
+    playerOne = Player(startTime: 600)
+    playerTwo = Player(startTime: 600)
     timerLabelTop = UILabel()
     timerLabelBottom = UILabel()
     stackView = UIStackView()
@@ -41,21 +41,22 @@ class TempCountdowntViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-//    let largeConfiguration = UIImage.SymbolConfiguration(scale: .large)
-//    let smallConfiguration = UIImage.SymbolConfiguration(scale: .small)
 
+    // MARK: Button set up
     let heavyConfiguration = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
-    arrowClockwiseImage = arrowClockwiseImage?.withConfiguration(heavyConfiguration)
     gearImage = gearImage?.withConfiguration(heavyConfiguration)
     pauseImage = pauseImage?.withConfiguration(heavyConfiguration)
+    arrowClockwiseImage = arrowClockwiseImage?.withConfiguration(heavyConfiguration)
 
     setTimeButton.setImage(gearImage, for: .normal)
+    setTimeButton.addTarget(self, action: #selector(setTimeButtonPressed), for: .touchUpInside)
     pauseTimeButton.setImage(pauseImage, for: .normal)
+    pauseTimeButton.addTarget(self, action: #selector(pauseButtonPressed), for: .touchUpInside)
     restartTimeButton.setImage(arrowClockwiseImage, for: .normal)
+    restartTimeButton.addTarget(self, action: #selector(restartTimeButtonPressed), for: .touchUpInside)
 
     // MARK: buttonEndTurnTop
-//    buttonEndTurnTop.backgroundColor = .darkGray
-    endTurnButtonTop.addTarget(self, action: #selector(endTurnTop), for: .touchUpInside)
+    endTurnButtonTop.addTarget(self, action: #selector(endTurnTopButtonPressed), for: .touchUpInside)
     view.addSubview(endTurnButtonTop)
     endTurnButtonTop.translatesAutoresizingMaskIntoConstraints = false
     endTurnButtonTop.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -64,8 +65,7 @@ class TempCountdowntViewController: UIViewController {
     endTurnButtonTop.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
 
     // MARK: buttonEndTurnBottom
-//    buttonEndTurnBottom.backgroundColor = .lightGray
-    endTurnButtonBottom.addTarget(self, action: #selector(endTurnBottom), for: .touchUpInside)
+    endTurnButtonBottom.addTarget(self, action: #selector(endTurnBottomButtonPressed), for: .touchUpInside)
     view.addSubview(endTurnButtonBottom)
     endTurnButtonBottom.translatesAutoresizingMaskIntoConstraints = false
     endTurnButtonBottom.topAnchor.constraint(equalTo: endTurnButtonTop.bottomAnchor).isActive = true
@@ -78,7 +78,6 @@ class TempCountdowntViewController: UIViewController {
     timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
     timerLabelTop.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
     timerLabelTop.font = timerLabelTop.font.withSize(60)
-//    labelTimerTop.backgroundColor = .green
     timerLabelTop.translatesAutoresizingMaskIntoConstraints = false
     timerLabelTop.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
     timerLabelTop.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.6).isActive = true
@@ -87,12 +86,11 @@ class TempCountdowntViewController: UIViewController {
     view.addSubview(timerLabelBottom)
     timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
     timerLabelBottom.font = timerLabelBottom.font.withSize(60)
-//    labelTimerTop.backgroundColor = .green
     timerLabelBottom.translatesAutoresizingMaskIntoConstraints = false
     timerLabelBottom.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
     timerLabelBottom.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1.6).isActive = true
 
-    // MARK: StackView
+    // MARK: stackView
     view.addSubview(stackView)
     stackView.axis = NSLayoutConstraint.Axis.horizontal
     stackView.distribution = UIStackView.Distribution.fillEqually
@@ -103,7 +101,6 @@ class TempCountdowntViewController: UIViewController {
 
     stackView.backgroundColor = .white
     stackView.translatesAutoresizingMaskIntoConstraints = false
-//    stackView.topAnchor.constraint(equalTo: labelTimerTop.bottomAnchor).isActive = true
     stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
     stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
     stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -111,6 +108,12 @@ class TempCountdowntViewController: UIViewController {
   }
 
   // MARK: - METHODS
+  func timeFormatted(_ totalSeconds: TimeInterval) -> String {
+    let seconds: Int = Int(totalSeconds) % 60
+    let minutes: Int = Int((totalSeconds / 60)) % 60
+    return String(format: "%02d:%02d", minutes, seconds)
+  }
+
   func startTimer() -> Timer {
     let countdownTimer = Timer.scheduledTimer(
       timeInterval: 1.0,
@@ -144,15 +147,7 @@ class TempCountdowntViewController: UIViewController {
     timerLabelBottom.text = "\(timeFormatted(playerTwo.timeRemaining))"
   }
 
-  func timeFormatted(_ totalSeconds: TimeInterval) -> String {
-    let seconds: Int = Int(totalSeconds) % 60
-    let minutes: Int = Int((totalSeconds / 60)) % 60
-    return String(format: "%02d:%02d", minutes, seconds)
-  }
-
-  @objc func endTurnTop(sender: UIButton) {
-    print("topButton pressed")
-
+  @objc func endTurnTopButtonPressed(sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
       timer = startTimer()
     }
@@ -162,12 +157,9 @@ class TempCountdowntViewController: UIViewController {
 
     endTurnButtonTop.backgroundColor = .systemGray5
     endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1)
-
   }
 
-  @objc func endTurnBottom(sender: UIButton) {
-    print("bottomButton pressed")
-
+  @objc func endTurnBottomButtonPressed(sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
       timer = startTimer()
     }
@@ -177,6 +169,43 @@ class TempCountdowntViewController: UIViewController {
 
     endTurnButtonTop.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1)
     endTurnButtonBottom.backgroundColor = .systemGray5
+  }
+
+
+  @objc func setTimeButtonPressed(_ sender: UIButton) {
+    let timePickerVC = TimePickerViewController()
+    present(timePickerVC, animated: true, completion: nil)
+    timePickerVC.timePickerDelegate = self
+  }
+
+  @objc func pauseButtonPressed(_ sender: UIButton) {
+    timer?.invalidate()
+    playerOne.isTurn = false
+    playerTwo.isTurn = false
+  }
+
+  @objc func restartTimeButtonPressed(_ sender: UIButton) {
+    restart()
+  }
+
+  func restart() {
+    timer?.invalidate()
+    playerOne.timeRemaining = playerOne.startTime
+    playerTwo.timeRemaining = playerTwo.startTime
+    playerOne.isTurn = false
+    playerTwo.isTurn = false
+    timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
+    timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
+    endTurnButtonTop.backgroundColor = .white
+    endTurnButtonBottom.backgroundColor = .white
+  }
+
+  func timeSelected(timeInterval: TimeInterval) {
+    playerOne.startTime = timeInterval
+    timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
+    playerTwo.startTime = timeInterval
+    timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
+    restart()
   }
 
 }

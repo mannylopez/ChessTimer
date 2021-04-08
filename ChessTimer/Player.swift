@@ -10,11 +10,9 @@ class Player {
   var isTurn: Bool
 
   // MARK: Methods
-
-
-  init(startTime: TimeInterval, timeRemaining: TimeInterval, isTurn: Bool = false) {
+  init(startTime: TimeInterval) {
     self.startTime = startTime
-    self.timeRemaining = timeRemaining
-    self.isTurn = isTurn
+    self.timeRemaining = startTime
+    self.isTurn = false
   }
 }
