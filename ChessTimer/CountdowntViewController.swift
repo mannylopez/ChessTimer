@@ -3,6 +3,51 @@
 
 import UIKit
 
+enum State {
+  case on
+  case off
+  case pause
+  case restart
+  case playerOneTurn
+  case playerTwoTurn
+  case gameInProgress
+}
+
+final class StateActionHandler {
+  enum Action {
+    case playerOneOn
+    case playerOneOff
+    case resetPlayerTimeRemaining
+    case playerTwoOn
+    case playerTwoOff
+    case startTimer
+    case invalidateTimer
+    case resetTimerLabel
+    case resetButtonBackgroundColor
+    case changeButtonBackgroundColor
+    case updateTimeRemainingLabel
+    }
+
+  static func actions(for state: State) -> [Action] {
+    switch state {
+    case .on:
+      return [.startTimer]
+    case .off:
+      return [.invalidateTimer, .playerOneOff, .playerTwoOff]
+    case .pause:
+      return [.invalidateTimer, .playerOneOff, .playerTwoOff]
+    case .restart:
+      return [.invalidateTimer, .resetPlayerTimeRemaining, .playerOneOff, .playerTwoOff, .resetTimerLabel, .resetButtonBackgroundColor]
+    case .playerOneTurn:
+      return [.playerOneOn, .playerTwoOff]
+    case .playerTwoTurn:
+      return [.playerOneOff, .playerTwoOn]
+    case .gameInProgress:
+      return [.changeButtonBackgroundColor, .updateTimeRemainingLabel]
+    }
+  }
+}
+
 class CountdowntViewController: UIViewController, TimePickerDelegate {
 
   // MARK: - Properties
@@ -20,6 +65,65 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
   var gearImage = UIImage(systemName: "gearshape.fill")
   var pauseImage = UIImage(systemName: "pause")
   var arrowClockwiseImage = UIImage(systemName: "arrow.clockwise")
+  var state = State.off {
+    didSet {
+      let actions = StateActionHandler.actions(for: state)
+      for action in actions {
+        switch action {
+        case .startTimer:
+          timer = startTimer()
+        case .invalidateTimer:
+          timer?.invalidate()
+        case .playerOneOff:
+          playerOne.isTurn = false
+        case .playerTwoOff:
+          playerTwo.isTurn = false
+        case .playerOneOn:
+          playerOne.isTurn = true
+        case .playerTwoOn:
+          playerTwo.isTurn = true
+        case .resetPlayerTimeRemaining:
+          playerOne.timeRemaining = playerOne.startTime
+          playerTwo.timeRemaining = playerTwo.startTime
+        case .resetTimerLabel:
+          timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
+          timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
+        case .resetButtonBackgroundColor:
+          endTurnButtonTop.backgroundColor = .white
+          endTurnButtonBottom.backgroundColor = .white
+        case .changeButtonBackgroundColor:
+          if playerOne.isTurn {
+            endTurnButtonTop.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
+            endTurnButtonBottom.backgroundColor = .systemGray5
+          } else {
+            endTurnButtonTop.backgroundColor = .systemGray5
+            endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
+          }
+
+          if playerOne.isTurn, playerOne.timeRemaining == 0 {
+            endTurnButtonTop.backgroundColor = .red
+
+            timer?.invalidate()
+          }
+
+          if playerTwo.isTurn, playerTwo.timeRemaining == 0 {
+            endTurnButtonBottom.backgroundColor = .red
+
+            timer?.invalidate()
+          }
+        case .updateTimeRemainingLabel:
+          if playerOne.isTurn, playerOne.timeRemaining > 0 {
+            playerOne.timeRemaining -= 1
+            timerLabelTop.text = "\(timeFormatted(playerOne.timeRemaining))"
+          }
+          if playerTwo.isTurn, playerTwo.timeRemaining > 0 {
+            playerTwo.timeRemaining -= 1
+            timerLabelBottom.text = "\(timeFormatted(playerTwo.timeRemaining))"
+          }
+        }
+      }
+    }
+  }
 
   init() {
     playerOne = Player(startTime: 600)
@@ -126,51 +230,22 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
   }
 
   @objc func updateTime() {
-    if playerOne.isTurn, playerOne.timeRemaining == 0 {
-      endTurnButtonTop.backgroundColor = .red
-    }
-
-    if playerOne.isTurn, playerOne.timeRemaining > 0 {
-      playerOne.timeRemaining -= 1
-    }
-
-    if playerTwo.isTurn, playerTwo.timeRemaining == 0 {
-      endTurnButtonBottom.backgroundColor = .red
-    }
-
-    if playerTwo.isTurn, playerTwo.timeRemaining > 0 {
-      playerTwo.timeRemaining -= 1
-    }
-
-    timerLabelTop.text = "\(timeFormatted(playerOne.timeRemaining))"
-
-    timerLabelBottom.text = "\(timeFormatted(playerTwo.timeRemaining))"
+    state = State.gameInProgress
   }
 
   @objc func endTurnTopButtonPressed(_ sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
-      timer = startTimer()
+      state = State.on
     }
-
-    playerOne.isTurn = false
-    playerTwo.isTurn = true
-
-    endTurnButtonTop.backgroundColor = .systemGray5
-    endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1)
+    state = State.playerTwoTurn
   }
 
   @objc func endTurnBottomButtonPressed(_ sender: UIButton) {
     if playerOne.isTurn == false && playerTwo.isTurn == false {
-      timer = startTimer()
+      state = State.on
     }
-
-    playerTwo.isTurn = false
-    playerOne.isTurn = true
-
-    endTurnButtonTop.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1)
-    endTurnButtonBottom.backgroundColor = .systemGray5
+    state = State.playerOneTurn
   }
-
 
   @objc func setTimeButtonPressed(_ sender: UIButton) {
     let timePickerVC = TimePickerViewController()
@@ -179,32 +254,17 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
   }
 
   @objc func pauseButtonPressed(_ sender: UIButton) {
-    timer?.invalidate()
-    playerOne.isTurn = false
-    playerTwo.isTurn = false
+    print(state)
+    state = State.pause
   }
 
   @objc func restartTimeButtonPressed(_ sender: UIButton) {
-    restart()
-  }
-
-  func restart() {
-    timer?.invalidate()
-    playerOne.timeRemaining = playerOne.startTime
-    playerTwo.timeRemaining = playerTwo.startTime
-    playerOne.isTurn = false
-    playerTwo.isTurn = false
-    timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
-    timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
-    endTurnButtonTop.backgroundColor = .white
-    endTurnButtonBottom.backgroundColor = .white
+    state = State.restart
   }
 
   func timeSelected(timeInterval: TimeInterval) {
     playerOne.startTime = timeInterval
-    timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
     playerTwo.startTime = timeInterval
-    timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
-    restart()
+    state = State.restart
   }
 }
