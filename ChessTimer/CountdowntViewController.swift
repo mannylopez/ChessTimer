@@ -1,12 +1,10 @@
 // Created by Manuel Lopez on 4/5/21.
-// Copyright © 2021 Airbnb Inc. All rights reserved.
 
 import UIKit
 
 enum State {
   case on
   case off
-  case pause
   case restart
   case playerOneTurn
   case playerTwoTurn
@@ -23,8 +21,8 @@ final class StateActionHandler {
     case startTimer
     case invalidateTimer
     case resetTimerLabel
-    case resetButtonBackgroundColor
-    case changeButtonBackgroundColor
+    case resetButton
+    case endTurn
     case updateTimeRemainingLabel
     }
 
@@ -34,16 +32,14 @@ final class StateActionHandler {
       return [.startTimer]
     case .off:
       return [.invalidateTimer, .playerOneOff, .playerTwoOff]
-    case .pause:
-      return [.invalidateTimer, .playerOneOff, .playerTwoOff]
     case .restart:
-      return [.invalidateTimer, .resetPlayerTimeRemaining, .playerOneOff, .playerTwoOff, .resetTimerLabel, .resetButtonBackgroundColor]
+      return [.invalidateTimer, .resetPlayerTimeRemaining, .playerOneOff, .playerTwoOff, .resetTimerLabel, .resetButton]
     case .playerOneTurn:
       return [.playerOneOn, .playerTwoOff]
     case .playerTwoTurn:
       return [.playerOneOff, .playerTwoOn]
     case .gameInProgress:
-      return [.changeButtonBackgroundColor, .updateTimeRemainingLabel]
+      return [.updateTimeRemainingLabel, .endTurn]
     }
   }
 }
@@ -80,37 +76,23 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
           playerTwo.isTurn = false
         case .playerOneOn:
           playerOne.isTurn = true
+          endTurnButtonTop.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
+          endTurnButtonBottom.backgroundColor = .systemGray5
         case .playerTwoOn:
           playerTwo.isTurn = true
+          endTurnButtonTop.backgroundColor = .systemGray5
+          endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
         case .resetPlayerTimeRemaining:
           playerOne.timeRemaining = playerOne.startTime
           playerTwo.timeRemaining = playerTwo.startTime
         case .resetTimerLabel:
           timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
           timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
-        case .resetButtonBackgroundColor:
+        case .resetButton:
           endTurnButtonTop.backgroundColor = .white
           endTurnButtonBottom.backgroundColor = .white
-        case .changeButtonBackgroundColor:
-          if playerOne.isTurn {
-            endTurnButtonTop.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
-            endTurnButtonBottom.backgroundColor = .systemGray5
-          } else {
-            endTurnButtonTop.backgroundColor = .systemGray5
-            endTurnButtonBottom.backgroundColor = UIColor(red: 0.117, green: 0.796, blue: 0.882, alpha: 1) // Cyan color
-          }
-
-          if playerOne.isTurn, playerOne.timeRemaining == 0 {
-            endTurnButtonTop.backgroundColor = .red
-
-            timer?.invalidate()
-          }
-
-          if playerTwo.isTurn, playerTwo.timeRemaining == 0 {
-            endTurnButtonBottom.backgroundColor = .red
-
-            timer?.invalidate()
-          }
+          endTurnButtonTop.isEnabled = true
+          endTurnButtonBottom.isEnabled = true
         case .updateTimeRemainingLabel:
           if playerOne.isTurn, playerOne.timeRemaining > 0 {
             playerOne.timeRemaining -= 1
@@ -120,14 +102,28 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
             playerTwo.timeRemaining -= 1
             timerLabelBottom.text = "\(timeFormatted(playerTwo.timeRemaining))"
           }
+        case .endTurn:
+          if playerOne.isTurn, playerOne.timeRemaining == 0 {
+            endTurnButtonTop.backgroundColor = .red
+            timer?.invalidate()
+            endTurnButtonTop.isEnabled = false
+            endTurnButtonBottom.isEnabled = false
+          }
+
+          if playerTwo.isTurn, playerTwo.timeRemaining == 0 {
+            endTurnButtonBottom.backgroundColor = .red
+            timer?.invalidate()
+            endTurnButtonTop.isEnabled = false
+            endTurnButtonBottom.isEnabled = false
+          }
         }
       }
     }
   }
 
   init() {
-    playerOne = Player(startTime: 600)
-    playerTwo = Player(startTime: 600)
+    playerOne = Player(startTime: 5)
+    playerTwo = Player(startTime: 5)
     timerLabelTop = UILabel()
     timerLabelBottom = UILabel()
     stackView = UIStackView()
@@ -254,8 +250,7 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
   }
 
   @objc func pauseButtonPressed(_ sender: UIButton) {
-    print(state)
-    state = State.pause
+    state = State.off
   }
 
   @objc func restartTimeButtonPressed(_ sender: UIButton) {

@@ -1,5 +1,4 @@
 // Created by Manuel Lopez on 3/6/21.
-// Copyright © 2021 Airbnb Inc. All rights reserved.
 
 import XCTest
 
