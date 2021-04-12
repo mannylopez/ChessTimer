@@ -21,9 +21,9 @@ final class StateActionHandler {
     case startTimer
     case invalidateTimer
     case resetTimerLabel
-    case resetButton
-    case endTurn
+    case resetTurnButton
     case updateTimeRemainingLabel
+    case endTurn
     }
 
   static func actions(for state: State) -> [Action] {
@@ -33,7 +33,7 @@ final class StateActionHandler {
     case .off:
       return [.invalidateTimer, .playerOneOff, .playerTwoOff]
     case .restart:
-      return [.invalidateTimer, .resetPlayerTimeRemaining, .playerOneOff, .playerTwoOff, .resetTimerLabel, .resetButton]
+      return [.invalidateTimer, .resetPlayerTimeRemaining, .playerOneOff, .playerTwoOff, .resetTimerLabel, .resetTurnButton]
     case .playerOneTurn:
       return [.playerOneOn, .playerTwoOff]
     case .playerTwoTurn:
@@ -88,7 +88,7 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
         case .resetTimerLabel:
           timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
           timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
-        case .resetButton:
+        case .resetTurnButton:
           endTurnButtonTop.backgroundColor = .white
           endTurnButtonBottom.backgroundColor = .white
           endTurnButtonTop.isEnabled = true
