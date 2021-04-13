@@ -2,6 +2,6 @@
 
 import UIKit
 
-protocol TimePickerDelegate {
+protocol TimePickerDelegate: class {
   func timeSelected(timeInterval: TimeInterval)
 }

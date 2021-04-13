@@ -11,7 +11,7 @@ class TimePickerViewController: UIViewController {
   var cancelButton: UIButton
   var xmarkImage = UIImage(systemName: "xmark")
   var checkmarkImage = UIImage(systemName: "checkmark")
-  var timePickerDelegate: TimePickerDelegate?
+  weak var timePickerDelegate: TimePickerDelegate?
 
   init() {
     datePicker = UIDatePicker()
