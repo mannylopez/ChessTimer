@@ -122,8 +122,8 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
   }
 
   init() {
-    playerOne = Player(startTime: 5)
-    playerTwo = Player(startTime: 5)
+    playerOne = Player(startTime: 600)
+    playerTwo = Player(startTime: 600)
     timerLabelTop = UILabel()
     timerLabelBottom = UILabel()
     stackView = UIStackView()
