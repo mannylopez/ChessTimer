@@ -29,7 +29,15 @@ class TimePickerViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = .white
+    view.backgroundColor =
+      UIColor { traitCollection in
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+          return .systemGray5
+        default:
+          return .white
+        }
+      }
 
     let heavyConfiguration = UIImage.SymbolConfiguration(pointSize: 30, weight: .heavy)
     xmarkImage = xmarkImage?.withConfiguration(heavyConfiguration)

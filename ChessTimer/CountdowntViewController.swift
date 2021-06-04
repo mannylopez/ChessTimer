@@ -89,8 +89,24 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
           timerLabelTop.text = "\(timeFormatted(playerOne.startTime))"
           timerLabelBottom.text = "\(timeFormatted(playerTwo.startTime))"
         case .resetTurnButton:
-          endTurnButtonTop.backgroundColor = .white
-          endTurnButtonBottom.backgroundColor = .white
+          endTurnButtonTop.backgroundColor =
+            UIColor { traitCollection in
+              switch traitCollection.userInterfaceStyle {
+              case .dark:
+                return .systemGray4
+              default:
+                return .white
+              }
+            }
+          endTurnButtonBottom.backgroundColor =
+            UIColor { traitCollection in
+              switch traitCollection.userInterfaceStyle {
+              case .dark:
+                return .systemGray4
+              default:
+                return .white
+              }
+            }
           endTurnButtonTop.isEnabled = true
           endTurnButtonBottom.isEnabled = true
         case .updateTimeRemainingLabel:
@@ -160,19 +176,37 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     endTurnButtonTop.addTarget(self, action: #selector(endTurnTopButtonPressed), for: .touchUpInside)
     view.addSubview(endTurnButtonTop)
     endTurnButtonTop.translatesAutoresizingMaskIntoConstraints = false
-    endTurnButtonTop.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-    endTurnButtonTop.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-    endTurnButtonTop.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-    endTurnButtonTop.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+    endTurnButtonTop.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    endTurnButtonTop.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    endTurnButtonTop.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    endTurnButtonTop.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    endTurnButtonTop.backgroundColor =
+      UIColor { traitCollection in
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+          return .systemGray4
+        default:
+          return .white
+        }
+      }
 
     // MARK: buttonEndTurnBottom
     endTurnButtonBottom.addTarget(self, action: #selector(endTurnBottomButtonPressed), for: .touchUpInside)
     view.addSubview(endTurnButtonBottom)
     endTurnButtonBottom.translatesAutoresizingMaskIntoConstraints = false
     endTurnButtonBottom.topAnchor.constraint(equalTo: endTurnButtonTop.bottomAnchor).isActive = true
-    endTurnButtonBottom.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-    endTurnButtonBottom.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-    endTurnButtonBottom.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    endTurnButtonBottom.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    endTurnButtonBottom.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    endTurnButtonBottom.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    endTurnButtonBottom.backgroundColor =
+      UIColor { traitCollection in
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+          return .systemGray4
+        default:
+          return .white
+        }
+      }
 
     // MARK: labelTimerTop
     view.addSubview(timerLabelTop)
@@ -200,11 +234,22 @@ class CountdowntViewController: UIViewController, TimePickerDelegate {
     stackView.addArrangedSubview(pauseTimeButton)
     stackView.addArrangedSubview(restartTimeButton)
 
-    stackView.backgroundColor = .white
+    stackView.isLayoutMarginsRelativeArrangement = true
+    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
+
     stackView.translatesAutoresizingMaskIntoConstraints = false
     stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-    stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-    stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    stackView.backgroundColor =
+      UIColor { traitCollection in
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+          return .systemGray4
+        default:
+          return .white
+        }
+      }
   }
 
   // MARK: - METHODS
